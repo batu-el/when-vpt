@@ -452,40 +452,6 @@
     </div>
   </section>
 
-  <!-- Environment -->
-  <section>
-    <div class="container">
-      <h2>The Frame Crossing Game</h2>
-      <p>
-        An agent (green cell) must navigate from left to right across a 96&times;96 grid while avoiding live cells evolving under Conway's Game of Life rules. Complexity is controlled by overlaying 1&ndash;4 independent GoL fields, each with different rules.
-      </p>
-      <figure class="figure">
-        <img src="assets/figures/Figure1.png" alt="Frame Crossing Game at complexity levels 1 through 4" loading="lazy">
-        <figcaption>The Frame Crossing Game at increasing complexity levels. From left to right: 1, 2, 3, and 4 simultaneous Game of Life fields.</figcaption>
-      </figure>
-
-      <h3 style="font-size: 1.1rem; margin-top: 40px; margin-bottom: 16px; color: #222;">Environment Dynamics</h3>
-      <div class="env-grid">
-        <div class="env-card">
-          <img src="assets/gifs/01_classic_conway.gif" alt="Classic Conway's Game of Life" loading="lazy">
-          <div class="label">1 Field (Classic)</div>
-        </div>
-        <div class="env-card">
-          <img src="assets/gifs/03_stochastic_two_fields.gif" alt="Two fields" loading="lazy">
-          <div class="label">2 Fields</div>
-        </div>
-        <div class="env-card">
-          <img src="assets/gifs/04_three_fields.gif" alt="Three fields" loading="lazy">
-          <div class="label">3 Fields</div>
-        </div>
-        <div class="env-card">
-          <img src="assets/gifs/05_four_fields.gif" alt="Four fields" loading="lazy">
-          <div class="label">4 Fields</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Agent Learning Progression -->
   <section>
     <div class="container">
@@ -529,29 +495,25 @@
       </div>
 
       <p style="margin-top: 24px;">
-        Below we show the same comparison across all four complexity levels (1-layer model). In easier environments (1 field), both approaches eventually learn. In harder environments (4 fields), neither makes much progress. The gap is most visible at intermediate difficulty.
+        Below we show trained agents (step 600) across all four complexity levels (1-layer model). In easier environments (1 field), the agent learns to cross. As complexity increases, navigation becomes progressively harder.
       </p>
 
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px;">
         <div class="env-card">
-          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
-          <img src="assets/videos/scratch_f1_L1/update_000600.gif" alt="Scratch f1 L1 step 600" loading="lazy">
-          <div class="label">1 Field &mdash; Step 600</div>
+          <img src="assets/videos/scratch_f1_L1/update_000600.gif" alt="Scratch 1 field step 600" loading="lazy">
+          <div class="label">1 Field</div>
         </div>
         <div class="env-card">
-          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
-          <img src="assets/videos/scratch_f2_L1/update_000600.gif" alt="Scratch f2 L1 step 600" loading="lazy">
-          <div class="label">2 Fields &mdash; Step 600</div>
+          <img src="assets/videos/scratch_f2_L1/update_000600.gif" alt="Scratch 2 fields step 600" loading="lazy">
+          <div class="label">2 Fields</div>
         </div>
         <div class="env-card">
-          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
-          <img src="assets/videos/scratch_f3_L1/update_000600.gif" alt="Scratch f3 L1 step 600" loading="lazy">
-          <div class="label">3 Fields &mdash; Step 600</div>
+          <img src="assets/videos/scratch_f3_L1/update_000600.gif" alt="Scratch 3 fields step 600" loading="lazy">
+          <div class="label">3 Fields</div>
         </div>
         <div class="env-card">
-          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
-          <img src="assets/videos/scratch_f4_L1/update_000600.gif" alt="Scratch f4 L1 step 600" loading="lazy">
-          <div class="label">4 Fields &mdash; Step 600</div>
+          <img src="assets/videos/scratch_f4_L1/update_000600.gif" alt="Scratch 4 fields step 600" loading="lazy">
+          <div class="label">4 Fields</div>
         </div>
       </div>
     </div>
@@ -569,31 +531,9 @@
         <figcaption>
           <strong>Pretrained vs. scratch RL training curves.</strong>
           In easy settings (1 field), pretraining accelerates convergence but both approaches reach similar asymptotes.
-          At intermediate difficulty (2 fields), pretrained agents converge faster and to a higher level.
+          At intermediate difficulty (2&ndash;3 fields), pretrained agents converge faster and reach a higher performance level.
           In the hardest settings (4 fields), all agents struggle regardless of initialization.
           Across all difficulty levels, the pretraining advantage is largest for smaller models.
-        </figcaption>
-      </figure>
-
-      <figure class="figure">
-        <img src="assets/figures/9.png" alt="Pretraining validation loss" loading="lazy">
-        <figcaption>
-          <strong>Pretraining validation loss.</strong>
-          Larger models achieve lower pretraining loss, as expected. However, better prediction accuracy does not automatically translate into better RL initialization.
-        </figcaption>
-      </figure>
-
-      <figure class="figure">
-        <img src="assets/figures/1.png" alt="Pretrained vs scratch with weight decay 1e-3 and reward R1" loading="lazy">
-        <figcaption>
-          <strong>Pretrained vs. scratch</strong> (weight decay 10<sup>&minus;3</sup>, reward R<sub>1</sub>).
-        </figcaption>
-      </figure>
-
-      <figure class="figure">
-        <img src="assets/figures/2.png" alt="Pretrained vs scratch with weight decay 1e-3 and reward R2" loading="lazy">
-        <figcaption>
-          <strong>Pretrained vs. scratch</strong> (weight decay 10<sup>&minus;3</sup>, reward R<sub>2</sub>).
         </figcaption>
       </figure>
     </div>
@@ -624,7 +564,7 @@
              Embodied Navigation with Next-Frame Prediction},
   author  = {El, Batu},
   journal = {NeurIPS},
-  year    = {2025},
+  year    = {2026},
   url     = {https://github.com/batu-el/when-vpt}
 }</pre>
       </div>
@@ -633,7 +573,7 @@
 
   <footer>
     <div class="container">
-      &copy; 2025 Batu El &middot; Stanford University
+      &copy; 2026 Batu El &middot; Stanford University
     </div>
   </footer>
 
