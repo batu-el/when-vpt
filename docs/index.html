@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When Does Video Pretraining Help?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 80px 0 40px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .hero h1 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 2.6rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: #111;
+    }
+
+    .authors {
+      font-size: 1.1rem;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    .affiliation {
+      font-size: 0.95rem;
+      color: #777;
+      margin-bottom: 32px;
+    }
+
+    .hero-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #333;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #1a1a1a;
+      border: 1.5px solid #d0d0d0;
+    }
+
+    .btn-secondary:hover {
+      border-color: #999;
+      background: #fafafa;
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Sections */
+    section {
+      padding: 56px 0;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    section h2 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #111;
+    }
+
+    section p {
+      font-size: 0.98rem;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    /* Abstract */
+    .abstract-text {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.12rem;
+      line-height: 1.8;
+      color: #2a2a2a;
+    }
+
+    /* Findings */
+    .findings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .finding-card {
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 24px;
+      border-left: 3px solid #1a1a1a;
+    }
+
+    .finding-card h3 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .finding-card p {
+      font-size: 0.95rem;
+      color: #333;
+      margin-bottom: 0;
+    }
+
+    /* Figures */
+    .figure {
+      margin: 32px 0;
+      text-align: center;
+    }
+
+    .figure img {
+      max-width: 100%;
+      border-radius: 4px;
+    }
+
+    .figure figcaption {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 12px;
+      line-height: 1.6;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* GIF Grid */
+    .gif-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 32px 0;
+    }
+
+    .gif-card {
+      text-align: center;
+    }
+
+    .gif-card img {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .gif-card .label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    /* Comparison */
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+
+    .comparison-col {
+      text-align: center;
+    }
+
+    .comparison-col img {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .comparison-col .label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    .comparison-heading {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 8px;
+      margin-top: 32px;
+      text-align: center;
+    }
+
+    .comparison-heading:first-of-type {
+      margin-top: 0;
+    }
+
+    .step-labels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 4px;
+    }
+
+    .step-labels span {
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #999;
+    }
+
+    /* Environment showcase */
+    .env-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .env-card {
+      text-align: center;
+    }
+
+    .env-card img {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .env-card .label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    /* BibTeX */
+    .bibtex-block {
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 20px 24px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #333;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #e0e0e0;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: #555;
+      font-family: 'Inter', system-ui, sans-serif;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #d0d0d0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      font-size: 0.82rem;
+      color: #999;
+    }
+
+    /* Arrow between GIFs */
+    .arrow-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #bbb;
+    }
+
+    .progression-block {
+      margin: 40px 0;
+      padding: 32px;
+      background: #fafafa;
+      border-radius: 10px;
+    }
+
+    .progression-block h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #222;
+    }
+
+    .progression-block .subtitle {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    .progression-row {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .progression-cell {
+      text-align: center;
+    }
+
+    .progression-cell img {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .progression-cell .label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #777;
+      margin-top: 6px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-bottom: 4px;
+    }
+
+    .tag-scratch {
+      background: #fde8e8;
+      color: #c0392b;
+    }
+
+    .tag-pretrained {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 1.8rem; }
+      .findings { grid-template-columns: 1fr; }
+      .env-grid { grid-template-columns: 1fr 1fr; }
+      .hero { padding: 48px 0 32px; }
+      section { padding: 40px 0; }
+      .progression-row { grid-template-columns: 1fr; gap: 8px; }
+      .arrow-col { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <h1>When Does Video Pretraining Help?<br>
+        <span style="font-size: 0.65em; font-weight: 400; color: #555;">Improving Embodied Navigation with Next-Frame Prediction</span>
+      </h1>
+      <div class="authors">Batu El</div>
+      <div class="affiliation">Stanford University</div>
+      <div class="hero-links">
+        <a class="btn btn-primary" href="assets/neurips_2025.pdf" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+          Read Paper
+        </a>
+        <a class="btn btn-secondary" href="https://github.com/batu-el/when-vpt" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+          Code
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Abstract -->
+  <section>
+    <div class="container">
+      <h2>Abstract</h2>
+      <p class="abstract-text">
+        Video pretraining can teach a model to predict future states with high fidelity, yet how this knowledge translates into better performance in downstream embodied tasks is not well understood. We isolate this question in a controlled benchmark built on Conway's Game of Life, where transition dynamics are exactly known and the pretraining and RL environments share identical dynamics. In our <em>Frame Crossing Game</em>, an agent must navigate a 96&times;96 grid while avoiding live cells evolving under Game of Life rules. We pre-train a neural network via next-frame prediction, achieving near-perfect accuracy, and compare pretrained RL agents against agents trained from scratch across environment complexities (1&ndash;4 fields) and model capacities (1&ndash;4 layers).
+      </p>
+      <div class="findings">
+        <div class="finding-card">
+          <h3>Finding 1</h3>
+          <p>The benefit of pretraining depends on environment complexity. At intermediate difficulty, pretrained agents converge faster and to a strictly higher performance level.</p>
+        </div>
+        <div class="finding-card">
+          <h3>Finding 2</h3>
+          <p>Smaller models benefit more from pretraining than larger ones. Better prediction accuracy does not automatically translate into better RL initialization.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Environment -->
+  <section>
+    <div class="container">
+      <h2>The Frame Crossing Game</h2>
+      <p>
+        An agent (green cell) must navigate from left to right across a 96&times;96 grid while avoiding live cells evolving under Conway's Game of Life rules. Complexity is controlled by overlaying 1&ndash;4 independent GoL fields, each with different rules.
+      </p>
+      <figure class="figure">
+        <img src="assets/figures/Figure1.png" alt="Frame Crossing Game at complexity levels 1 through 4" loading="lazy">
+        <figcaption>The Frame Crossing Game at increasing complexity levels. From left to right: 1, 2, 3, and 4 simultaneous Game of Life fields.</figcaption>
+      </figure>
+
+      <h3 style="font-size: 1.1rem; margin-top: 40px; margin-bottom: 16px; color: #222;">Environment Dynamics</h3>
+      <div class="env-grid">
+        <div class="env-card">
+          <img src="assets/gifs/01_classic_conway.gif" alt="Classic Conway's Game of Life" loading="lazy">
+          <div class="label">1 Field (Classic)</div>
+        </div>
+        <div class="env-card">
+          <img src="assets/gifs/03_stochastic_two_fields.gif" alt="Two fields" loading="lazy">
+          <div class="label">2 Fields</div>
+        </div>
+        <div class="env-card">
+          <img src="assets/gifs/04_three_fields.gif" alt="Three fields" loading="lazy">
+          <div class="label">3 Fields</div>
+        </div>
+        <div class="env-card">
+          <img src="assets/gifs/05_four_fields.gif" alt="Four fields" loading="lazy">
+          <div class="label">4 Fields</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Learning Progression -->
+  <section>
+    <div class="container">
+      <h2>Learning to Navigate</h2>
+      <p>
+        What does an agent look like before and after training? Below we compare episodes recorded at training step 100 (early) versus step 600 (late) for both scratch-trained and pretrained agents in the 2-field environment with a 2-layer model.
+      </p>
+
+      <div class="progression-block">
+        <span class="tag tag-scratch">From Scratch</span>
+        <h3>Trained from Scratch</h3>
+        <p class="subtitle">2 fields, 2-layer model &mdash; no pretraining</p>
+        <div class="progression-row">
+          <div class="progression-cell">
+            <img src="assets/videos/scratch_f2_L2/update_000100.gif" alt="Scratch agent at step 100" loading="lazy">
+            <div class="label">Step 100</div>
+          </div>
+          <div class="arrow-col">&rarr;</div>
+          <div class="progression-cell">
+            <img src="assets/videos/scratch_f2_L2/update_000600.gif" alt="Scratch agent at step 600" loading="lazy">
+            <div class="label">Step 600</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progression-block">
+        <span class="tag tag-pretrained">Pretrained</span>
+        <h3>Initialized from Video Pretraining</h3>
+        <p class="subtitle">2 fields, 2-layer model &mdash; pretrained with next-frame prediction</p>
+        <div class="progression-row">
+          <div class="progression-cell">
+            <img src="assets/videos/pretrained_f2_L2/update_000100.gif" alt="Pretrained agent at step 100" loading="lazy">
+            <div class="label">Step 100</div>
+          </div>
+          <div class="arrow-col">&rarr;</div>
+          <div class="progression-cell">
+            <img src="assets/videos/pretrained_f2_L2/update_000600.gif" alt="Pretrained agent at step 600" loading="lazy">
+            <div class="label">Step 600</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top: 24px;">
+        Below we show the same comparison across all four complexity levels (1-layer model). In easier environments (1 field), both approaches eventually learn. In harder environments (4 fields), neither makes much progress. The gap is most visible at intermediate difficulty.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px;">
+        <div class="env-card">
+          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
+          <img src="assets/videos/scratch_f1_L1/update_000600.gif" alt="Scratch f1 L1 step 600" loading="lazy">
+          <div class="label">1 Field &mdash; Step 600</div>
+        </div>
+        <div class="env-card">
+          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
+          <img src="assets/videos/scratch_f2_L1/update_000600.gif" alt="Scratch f2 L1 step 600" loading="lazy">
+          <div class="label">2 Fields &mdash; Step 600</div>
+        </div>
+        <div class="env-card">
+          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
+          <img src="assets/videos/scratch_f3_L1/update_000600.gif" alt="Scratch f3 L1 step 600" loading="lazy">
+          <div class="label">3 Fields &mdash; Step 600</div>
+        </div>
+        <div class="env-card">
+          <span class="tag tag-scratch" style="font-size: 0.6rem;">Scratch</span>
+          <img src="assets/videos/scratch_f4_L1/update_000600.gif" alt="Scratch f4 L1 step 600" loading="lazy">
+          <div class="label">4 Fields &mdash; Step 600</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section>
+    <div class="container">
+      <h2>Main Results</h2>
+      <p>
+        Training curves comparing pretrained (blue) and scratch (red) agents across all complexity levels (columns: 1&ndash;4 fields) and model capacities (rows: 1&ndash;4 layers). Progress is measured as the percentage of columns crossed.
+      </p>
+      <figure class="figure">
+        <img src="assets/figures/5.png" alt="Main results: pretrained vs scratch training curves" loading="lazy">
+        <figcaption>
+          <strong>Pretrained vs. scratch RL training curves.</strong>
+          In easy settings (1 field), pretraining accelerates convergence but both approaches reach similar asymptotes.
+          At intermediate difficulty (2 fields), pretrained agents converge faster and to a higher level.
+          In the hardest settings (4 fields), all agents struggle regardless of initialization.
+          Across all difficulty levels, the pretraining advantage is largest for smaller models.
+        </figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="assets/figures/9.png" alt="Pretraining validation loss" loading="lazy">
+        <figcaption>
+          <strong>Pretraining validation loss.</strong>
+          Larger models achieve lower pretraining loss, as expected. However, better prediction accuracy does not automatically translate into better RL initialization.
+        </figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="assets/figures/1.png" alt="Pretrained vs scratch with weight decay 1e-3 and reward R1" loading="lazy">
+        <figcaption>
+          <strong>Pretrained vs. scratch</strong> (weight decay 10<sup>&minus;3</sup>, reward R<sub>1</sub>).
+        </figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="assets/figures/2.png" alt="Pretrained vs scratch with weight decay 1e-3 and reward R2" loading="lazy">
+        <figcaption>
+          <strong>Pretrained vs. scratch</strong> (weight decay 10<sup>&minus;3</sup>, reward R<sub>2</sub>).
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section>
+    <div class="container">
+      <h2>Model Architecture</h2>
+      <p>
+        We use a transformer-based architecture for both pretraining (next-frame prediction) and RL. The model processes grid frames through patch embedding and transformer layers, producing either next-frame predictions or action distributions.
+      </p>
+      <figure class="figure">
+        <img src="assets/figures/model.png" alt="Model architecture" loading="lazy" style="max-width: 600px;">
+        <figcaption>Model architecture. The same backbone is used for pretraining and RL, enabling direct weight transfer.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- BibTeX -->
+  <section>
+    <div class="container">
+      <h2>Citation</h2>
+      <div class="bibtex-block">
+        <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+<pre>@article{el2025whenvpt,
+  title   = {When Does Video Pretraining Help? Improving
+             Embodied Navigation with Next-Frame Prediction},
+  author  = {El, Batu},
+  journal = {NeurIPS},
+  year    = {2025},
+  url     = {https://github.com/batu-el/when-vpt}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      &copy; 2025 Batu El &middot; Stanford University
+    </div>
+  </footer>
+
+  <script>
+    function copyBibtex() {
+      const text = document.querySelector('.bibtex-block pre').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
